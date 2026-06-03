@@ -101,3 +101,33 @@ Below is the `head()` of the cleaned DataFrame:
 ></iframe>
 
 This interactive histogram displays the distribution of track popularity scores across the dataset, revealing a roughly normal distribution centered in the 30-50 range, meaning most songs achieve only moderate success. However, there is a massive, distinct spike at exactly zero, highlighting the harsh reality of the music industry where a significant volume of tracks remain entirely undiscovered or unplayed by the platform's algorithm.
+
+### Bivariate Analysis: The Fame Multiplier
+
+<iframe
+    src="assets/artists_vs_track.html"
+    width = "800"
+    height="600"
+    frameborder="0"
+></iframe>
+
+This 2D density heatmap reveals a clear positive trend between an artist's overall popularity and popularity of their tracks. Because the data is upward-sloping, it shows that popular artists almost never release tracks with near 0 popularity, regardless of its acoustic dataset. 
+
+### Aggregate Analysis: Features by Top Genres
+
+To understand how audio features vary across different styles of music, I grouped the dataset by the top 10 most frequent genres and calculated their mean acoustic features and popularity scores.
+
+| track_genre       |   danceability |   energy |   valence |   popularity |
+|:------------------|---------------:|---------:|----------:|-------------:|
+| pop-film          |          0.597 |    0.605 |     0.529 |       59.283 |
+| pop               |          0.630 |    0.606 |     0.506 |       47.576 |
+| progressive-house |          0.624 |    0.813 |     0.365 |       46.615 |
+| piano             |          0.455 |    0.320 |     0.313 |       45.273 |
+| pagode            |          0.578 |    0.712 |     0.688 |       44.298 |
+| acoustic          |          0.550 |    0.435 |     0.424 |       42.483 |
+| punk-rock         |          0.507 |    0.810 |     0.567 |       38.236 |
+| power-pop         |          0.473 |    0.802 |     0.615 |       26.898 |
+| opera             |          0.314 |    0.317 |     0.215 |       24.621 |
+| party             |          0.667 |    0.871 |     0.681 |       20.982 |
+
+**Significance of this Table:** This grouped table is highly significant to our core hypothesis because it proves that "sounding fun" does not automatically equate to "being popular." For example, the `party` and `power-pop` genres have the highest average `energy` and `danceability` metrics in the dataset, yet they have the lowest average popularity scores, reinforcing the conclusion that intrinsic audio features are poor standalone predictors of commercial success.
