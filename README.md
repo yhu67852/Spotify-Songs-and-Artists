@@ -160,6 +160,6 @@ The `tempo` column contains approximately 22,000 missing values. To understand i
   frameborder="0"
 ></iframe>
 
-**Interpreting the Results:** The interactive plot above shows the empirical distribution of the test statistic (the absolute difference in mean `acousticness`) under the null hypothesis. The red dashed line represents our actual observed statistic. 
+**Interpreting the Results:** The plot above shows the distribution of the test statistic (the absolute difference in mean `acousticness`) under the null hypothesis. The red dashed line represents our actual observed statistic. 
 
-Because our observed statistic falls entirely outside the realm of random chance (far to the right of the gray distribution), we confidently conclude that `tempo` is missing systematically based on acousticness. Conceptually, this makes perfect sense for our overarching question: highly acoustic tracks (like classical symphony recordings or ambient sleep sounds) often lack a rigid digital drumbeat, causing the algorithm to fail to detect a Beats Per Minute (BPM), resulting in a missing `tempo` value.
+Because our observed statistic falls entirely outside the realm of random chance (far to the right of the gray distribution), we confidently conclude that `tempo` is missing systematically based on acousticness. This makes perfect sense as highly acoustic tracks (like classical symphony recordings or ambient sleep sounds) often lack a rigid digital drumbeat, causing the algorithm to fail to detect a Beats Per Minute (BPM), resulting in a missing `tempo` value.
