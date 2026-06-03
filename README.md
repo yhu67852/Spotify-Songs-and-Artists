@@ -82,4 +82,22 @@ I performed an `inner` merge between our cleaned `music_tracks.csv` and `artists
 
 Below is the `head()` of the cleaned DataFrame: 
 
-"| track_name                 |   artist_popularity |   followers |   track_popularity |\n|:---------------------------|--------------------:|------------:|-------------------:|\n| Comedy                     |                  66 |     852,637 |                 73 |\n| Ghost - Acoustic           |                  53 |      11,874 |                 55 |\n| To Begin Again             |                  68 |     722,496 |                 57 |\n| Can't Help Falling In Love |                  71 |     438,860 |                 71 |\n| Hold On                    |                  70 |      99,345 |                 82 |"
+| track_name                 |   artist_popularity |   followers |   track_popularity |
+|:---------------------------|--------------------:|------------:|-------------------:|
+| Comedy                     |                  66 |     852,637 |                 73 |
+| Ghost - Acoustic           |                  53 |      11,874 |                 55 |
+| To Begin Again             |                  68 |     722,496 |                 57 |
+| Can't Help Falling In Love |                  71 |     438,860 |                 71 |
+| Hold On                    |                  70 |      99,345 |                 82 |
+
+
+### Univariate Analysis: Track Popularity
+
+<iframe
+  src="assets/track_popularity_dist.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+This interactive histogram displays the distribution of track popularity scores across the dataset, revealing a roughly normal distribution centered in the 30-50 range, meaning most songs achieve only moderate success. However, there is a massive, distinct spike at exactly zero, highlighting the harsh reality of the music industry where a significant volume of tracks remain entirely undiscovered or unplayed by the platform's algorithm.
