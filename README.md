@@ -48,3 +48,38 @@ Out of the dozens of availible data points, my analysis focused on the following
 * **`tempo`** *(float)*: The overall estimated tempo of a track in beats per minute (BPM). 
 
 * **`explicit`** *(boolean)*: Whether or not the track contains explicit language (`True` = explicit, `False` = clean). 
+
+
+## Data Cleaning and Exploratory Data Analysis
+
+### Handling Missing Audio Features (`tempo`)
+
+The first thing I did was drop around 22,000 rows where `tempo`, `artists`, or `track_name` were missing. 
+
+Then, I realized, through a permutation test, that the missingness of `tempo` was highly dependent on `acousticness`, which made sense because tracks with high acousticness (like classical orchestral recordings, rain sounds, etc.) lack a drumbeat, which caused the algorithm to fail to detect a Beats Per Minute (BPM). 
+
+By dropping those tracks, I restricted the dataset to "structured" music. This means that the conclusions only apply towards traditional, rhythmic music. 
+
+
+### String Splitting and Explosion (`artists`) 
+
+The `artists` column contained strings of multiple artists separated by semicolons (e.g. `"Ingrid Michaelson;ZAYN"`). I converted these into a Python list and used the .explode() function to separate them. 
+
+Splitting these strings allowed for the two datasets to be merged into one because the `artists.csv` dataset did not include "Ingrid Michaelson;ZAYN" as a single entry. 
+
+
+### Deduplication for Primary Artist Mapping
+
+After exploding the dataset, I used `drop_duplicates(subset=['track_id'])` to keep only the *first* artist of each track because the first artists listed is generally the "Lead Artist" while subsequent artists are "Featured Artists". The Lead Artist's popularity generally drives the popularity of a track. 
+
+By dropping the duplicates, it made the paired t-test to be more accurate. Without dropping duplicates, our sample size would have double-counted collaborative hits. 
+
+### The Inner Merge
+
+I performed an `inner` merge between our cleaned `music_tracks.csv` and `artists.csv`. This allowed for any artists with unknown follower counts to be dropped. Because `followers` was the core independent variable, keeping tracks with null followers would have ruined the model. 
+
+### The Cleaned DataFrame
+
+Below is the `head()` of the cleaned DataFrame: 
+
+"| track_name                 |   artist_popularity |   followers |   track_popularity |\n|:---------------------------|--------------------:|------------:|-------------------:|\n| Comedy                     |                  66 |     852,637 |                 73 |\n| Ghost - Acoustic           |                  53 |      11,874 |                 55 |\n| To Begin Again             |                  68 |     722,496 |                 57 |\n| Can't Help Falling In Love |                  71 |     438,860 |                 71 |\n| Hold On                    |                  70 |      99,345 |                 82 |"
