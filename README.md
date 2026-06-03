@@ -131,3 +131,35 @@ To understand how audio features vary across different styles of music, I groupe
 | party             |          0.667 |    0.871 |     0.681 |       20.982 |
 
 **Significance of this Table:** This grouped table is highly significant to our core hypothesis because it proves that "sounding fun" does not automatically equate to "being popular." For example, the `party` and `power-pop` genres have the highest average `energy` and `danceability` metrics in the dataset, yet they have the lowest average popularity scores, reinforcing the conclusion that intrinsic audio features are poor standalone predictors of commercial success.
+
+
+## Assessment of Missingness
+
+### NMAR Analysis
+In this dataset, the `album_name` column contains missing values that are likely Not Missing At Random (NMAR). 
+
+This is because some tracks, released as singles, do not belong to any albums, thus leading to the track's album column being blank. Because the missingness is now dependent on the release strategy, it is NMAR. 
+
+If there was another column about the type of release of the song (e.g. 'EP', 'Single', 'Live', 'Album), the missingness would go from NMAR to Missing at Random (MAR). This way, the missingness of `album_name` would be dependent on the new column of `release_type`. 
+
+
+---
+
+### Missingness Permutation Tests
+The `tempo` column contains approximately 22,000 missing values. To understand if this missingness was dependent on other features in the dataset, I ran two permutation tests (using 500 simulations and a significance level of $\alpha = 0.05$).
+
+1. **Test 1: Does the missingness of `tempo` depend on `danceability`?**
+    * **Result:** The $p$-value was roughly $0.40$. We fail to reject the null hypothesis. The missingness of `tempo` does **not** depend on a track's danceability.
+2. **Test 2: Does the missingness of `tempo` depend on `acousticness`?**
+    * **Result:** The $p$-value was $0.000$. We reject the null hypothesis. The missingness of `tempo` is highly dependent on a track's acousticness.
+
+<iframe
+  src="assets/missingness_test.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+**Interpreting the Results:** The interactive plot above shows the empirical distribution of the test statistic (the absolute difference in mean `acousticness`) under the null hypothesis. The red dashed line represents our actual observed statistic. 
+
+Because our observed statistic falls entirely outside the realm of random chance (far to the right of the gray distribution), we confidently conclude that `tempo` is missing systematically based on acousticness. Conceptually, this makes perfect sense for our overarching question: highly acoustic tracks (like classical symphony recordings or ambient sleep sounds) often lack a rigid digital drumbeat, causing the algorithm to fail to detect a Beats Per Minute (BPM), resulting in a missing `tempo` value.
