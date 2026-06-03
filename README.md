@@ -105,10 +105,10 @@ This interactive histogram displays the distribution of track popularity scores 
 ### Bivariate Analysis: The Fame Multiplier
 
 <iframe
-    src="assets/artists_vs_track.html"
-    width = "800"
-    height="600"
-    frameborder="0"
+  src="assets/artist_vs_track.html"
+  width="800"
+  height="600"
+  frameborder="0"
 ></iframe>
 
 This 2D density heatmap reveals a clear positive trend between an artist's overall popularity and popularity of their tracks. Because the data is upward-sloping, it shows that popular artists almost never release tracks with near 0 popularity, regardless of its acoustic dataset. 
