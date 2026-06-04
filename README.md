@@ -239,12 +239,12 @@ Curious about how well your favorite artists scores? Search the database of Spot
   }
   .result-card h4 {
     margin: 0 0 5px 0;
-    color: #111;
+    color: #111 !important;
   }
   .result-card p {
     margin: 0;
     font-size: 14px;
-    color: #555;
+    color: #555 !important;
   }
 </style>
 
