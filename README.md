@@ -228,6 +228,7 @@ Curious about how well your favorite artists scores? Search the database of Spot
     border: 2px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+    color: #333;
   }
   .result-card {
     background-color: #f9f9f9;
@@ -238,6 +239,7 @@ Curious about how well your favorite artists scores? Search the database of Spot
   }
   .result-card h4 {
     margin: 0 0 5px 0;
+    color: #111;
   }
   .result-card p {
     margin: 0;
