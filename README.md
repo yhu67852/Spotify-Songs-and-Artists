@@ -267,7 +267,7 @@ Curious about how well your favorite artists scores? Search the database of Spot
     }
 </script>
 
-### Problem Formulation
+## Problem Formulation
 * **Prediction Problem:** Predicting the popularity score of a track on Spotify.
 * **Type:** Regression (predicting a continuous score from 0 to 100).
 * **Response Variable:** `track_popularity`. This was the variable because my goal was to understand what drives a track's commercial success on Spotify. 
