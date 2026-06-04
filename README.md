@@ -206,6 +206,67 @@ Because the $p$-value was so small, well below the $\alpha$=0.05 significance le
 The data shows that the music industry is not purely based on audio features. When the acoustic profile of a song is constant, established artists provide an average of around 5.5 popularity points solely through their brand and existing audience. 
 
 
+## Interactive Tool: Artists Popularity Search
+
+Curious about how well your favorite artists scores? Search the database of Spotify's top 5,000 most followed artists to see their popularity score!
+
+<style>
+    #artistSearch{
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    .result-card{
+        background-color: #f9f9f9;
+        border-left: 6px solid #1DB954;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .result-card h4{
+        margin: 0 0 5px 0
+    }
+    .result-card p{
+        margin: 0;
+        font-size: 14px;
+        color: #555;
+    }
+</style>
+<input type="text" id="artistSearch" placeholder="Type an artist name (e.g., Taylor Swift)..." onkeyup="searchArtists()">
+
+<div id="searchResults"></div>
+
+<script>
+    let artistData=[];
+    fetch('assets/artist.json').then(response => response.json()).then(data => {artistData = data;}).catch(error => console.error('Error loading artist data:', error));
+    function searchArtists(){
+        const input = document.getElementById('artistSearch').value.toLowerCase();
+        const resultsDiv = document.getElementById('searchResults');
+        resultsDiv.innerHTML = '';
+        if (input.length < 2) return;
+        const filtered = artistData.filter(artist => artist.name.toLowerCase().includes(input)).slice(0, 5);
+        if (filtered.length === 0){
+            resultsDiv.innerHTML = '<p style="color: gray; font-style: italic;">No Artist found in the top 5000.</p>';
+            return;
+        }
+        filtered.forEach(artist => {
+            const formattedFollowers = artist.followers.toLocaleString();
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            card.innerHTML = `
+                <h4>${artist.name}</h4>
+                <p><strong>Popularity Score:</strong> ${artist.popularity} / 100 </p>
+                <p><strong>Followers:</strong> ${formattedFollowers}</p>
+            `;
+            resultsDiv.appendChild(card);
+        });
+    }
+</script>
+
 ### Problem Formulation
 * **Prediction Problem:** Predicting the popularity score of a track on Spotify.
 * **Type:** Regression (predicting a continuous score from 0 to 100).
