@@ -145,7 +145,7 @@ If there was another column about the type of release of the song (e.g. 'EP', 'S
 
 ---
 
-### Missingness Permutation Tests
+### Missingness Dependency
 The `tempo` column contains approximately 22,000 missing values. To understand if this missingness was dependent on other features in the dataset, I ran two permutation tests (using 500 simulations and a significance level of $\alpha = 0.05$).
 
 1. **Test 1: Does the missingness of `tempo` depend on `danceability`?**
@@ -163,3 +163,94 @@ The `tempo` column contains approximately 22,000 missing values. To understand i
 **Interpreting the Results:** The plot above shows the distribution of the test statistic (the absolute difference in mean `acousticness`) under the null hypothesis. The red dashed line represents our actual observed statistic. 
 
 Because our observed statistic falls entirely outside the realm of random chance (far to the right of the gray distribution), we confidently conclude that `tempo` is missing systematically based on acousticness. This makes perfect sense as highly acoustic tracks (like classical symphony recordings or ambient sleep sounds) often lack a rigid digital drumbeat, causing the algorithm to fail to detect a Beats Per Minute (BPM), resulting in a missing `tempo` value.
+
+
+## Hypothesis Testing
+
+Finally, we can answer our central question: whether an artist's pre-existing fame boosts a song's popularity regardless of how it sounds. 
+
+Using a K-Nearest Neighbors (KNN) algorithm, I paired 2,000 tracks from "Mainstream" artists, which I defined as artists in the top 20% follower count, with their exact "Audio Twins" from "Underground" artists, which I defined as the bottom 50%. To find the "Audio Twins", I used the Euclidean distance of their musical features (danceability, energy, tempo, etc.), meaning that they sound nearly identical mathematically. 
+
+
+### The Hypothesis
+* **Null Hypothesis ($H_0$):** There is no difference between the mean popularity of tracks released by mainstream artists and their mathematically identical "audio twins" released by underground artists. 
+* **Alternative Hypothesis ($H_1$):** Tracks released by mainstream artists have a statistically significant higher mean popularity than their underground audio twins. 
+
+
+### Test Statistic and Significance Level
+* **Test Statistic:** The mean difference in popularity scores. I evaluated this using a Paired t-test. 
+* **Significance Level:** $\alpha$ = 0.05
+
+
+**Justification:** I used the paired t-test because our samples are explicitly dependent. Because the popular songs were paired with underground songs with the same acoustic profiles, I was able to isolate the specific multiplier that each artist provided to their songs. 
+
+### The Results
+
+<iframe
+src='assets/hypothesis_test.html'
+width='800'
+height='550'
+frameborder='0'
+></iframe>
+
+* **Average Popularity of Tracks by Mainstream Artists:** 39.74
+* **Average Popularity of Tracks by Underground Artists:** 34.08
+* **Mean Difference (The "Artists Boost"):** +5.65
+* **$p$-value:** $2.8485 \times 10^{-16}$
+
+
+### The Conclusion
+
+Because the $p$-value was so small, well below the $\alpha$=0.05 significance level, we **reject the null hypothesis**
+
+The data shows that the music industry is not purely based on audio features. When the acoustic profile of a song is constant, established artists provide an average of around 5.5 popularity points solely through their brand and existing audience. 
+
+
+### Problem Formulation
+* **Prediction Problem:** Predicting the popularity score of a track on Spotify.
+* **Type:** Regression (predicting a continuous score from 0 to 100).
+* **Response Variable:** `track_popularity`. This was the variable because my goal was to understand what drives a track's commercial success on Spotify. 
+* **Evaluation Metric:** I chose $R^2$ (R-squared) to evaluate the model's performance, supplemented by RMSE (Root Mean Squared Error). This is a regression problem and $R^2$ is the most appropriate metric because it shows exactly how much of out variace is explained by our chosen features. 
+* **Time of Prediction Justification:** When a song is released, the only known information is its audio features (tempo, danceability, etc.), its explicit status, and the releasing artist's follower count. Thus, the model can only use those provided datapoints as features. 
+
+
+### Baseline Model
+
+For the baseline model, I used a simple linear regression algorithm to test the limits of pure sound. 
+
+* **Features Used:** 9 quantitative features (`danceability`, `energy`, `valence`, `acousticness`, `instrumentalness`, `loudness`, `speechiness`, `liveness`, and `tempo`)
+* **Performance:** The baseline model achieved an $R^2$ of 0.0355.
+* **Is the Model "Good"?** **No** An $R^2$ of 0.0355 means that the model only explains 3.55% of the variance in a track's popularity. BUT, this proves that a song's success is not dependent on its acoustic profile at all. 
+
+
+### Final Model
+To improve upon the baseline model, I used artist clout and feature engineering to build a stronger pipline. 
+
+
+#### Added Features and Engineering (DGP Perspective)
+1. **Added `followers` (Quantitative):** I added the artist's follwer count and applied a `QuantileTransformer` to it. Because the music industry is dominated by a few megastars with nearly 100 million followers, I used this to balance out their dominance with the thousands of indie artists with fewer than 10,000 followers.
+2. **Added `explicit` (Nominal):** I added the explicit status of the track and used a `OneHotEncoder` to change it to boolean values. Because music consumption is highly demographic-driven, explicit tracks tend to perform slightly better. This is likely because they appeal more towards the core demographic that streaming caters towards (teens and young adults). 
+3. **`Standard Scalar`:** I applied this to the raw acoustic features to ensure that metric on a 0-1 scale (like energy) were weighted the same as metrics on a larger scale (like tempo BPM).
+
+
+#### Algorithmn and Hyperparameter Tuning
+I upgraded the modeling algorithm from a simple linear regression to a Random Forest Regressor to capture the non-linear relationships in music trends.
+
+To select the best model, I used `GridSearchCV` with 3-fold cross-validation to test multiple hyperparameters: 
+* `max_depth`: I tested 10, 20, and None
+* `min_samples_leaf`: I tested 1, 5, and 10
+
+#### Final Performance Comparison
+<iframe
+src="assets/model_performance.html"
+width="800"
+height="600"
+frameborder="0"
+></iframe>
+
+The Final Model achieved an $R^2$ of **0.3192**. 
+
+
+This is a HUGE improvement over the baseline model's 0.0355. The model is now able to explain that the datapoints account for nearly **32%** of a track's popularity just by introducing the artist's pre-existing audience size. 
+
+As seen in the above plot, where the gray dashed line represents perfect predictions, the model successfully captures the upward trajectory of track popularity. The variance around the line is mainly due to differences in human tastes in music. This proves that nearly $\frac{1}{3}$ of a song's success is tied to its sound and artist brand. 
