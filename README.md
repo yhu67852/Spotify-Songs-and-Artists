@@ -281,12 +281,16 @@ Curious about how well your favorite artists scores? Search the database of Spot
     filtered.forEach(artist => {
       const formattedFollowers = artist.followers.toLocaleString();
       
+      const boostSign = artist.artist_weight > 0 ? '+' : '';
+      const boostColor = artist.artist_weight > 0 ? '#1DB954' : '#d9534f';
       const card = document.createElement('div');
+
       card.className = 'result-card';
       card.innerHTML = `
         <h4>${artist.name}</h4>
         <p><strong>Popularity Score:</strong> ${artist.popularity} / 100</p>
         <p><strong>Followers:</strong> ${formattedFollowers}</p>
+        <p><strong>Fame Multiplier:</strong> <span style="color: ${boostColor}; font-weight: bold;">${boostSign}${artist.artist_weight} pts</span></p>
       `;
       resultsDiv.appendChild(card);
     });
