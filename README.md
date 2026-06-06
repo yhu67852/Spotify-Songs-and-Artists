@@ -7,7 +7,7 @@ window.MathJax = {
   }
 };
 </script>
-# Spotify-Songs-and-Artists
+# The 'Fame Multiplier' in the Music Industry
 This is a data science project for UCSD's DSC80 course. 
 ## Introduction: 
 Everyday, over 100,000 new songs are uploaded to streaming platforms like Spotify. Some of these songs become global hits, played around the world for years to come, while others fade into obscurity. But what actually seperates a global anthem from an unknown song? 
